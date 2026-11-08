@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "mode": "real",
+  "movies": [
+    {
+      "id": "local:your-stable-id",
+      "title": "Your authorized title",
+      "year": 2020,
+      "runtime": null,
+      "source_ids": {},
+      "availability": [],
+      "private": {
+        "schema_version": 1,
+        "features": {
+          "pace": null,
+          "warmth": null,
+          "intensity": null,
+          "character": null,
+          "wonder": null,
+          "closure": null
+        },
+        "source_text": "",
+        "missing": [
+          "pace",
+          "warmth",
+          "intensity",
+          "character",
+          "wonder",
+          "closure"
+        ],
+        "provenance": {
+          "kind": "user-import",
+          "version": "1"
+        }
+      }
+    }
+  ],
+  "history": []
+}

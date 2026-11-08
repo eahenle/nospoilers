@@ -1,0 +1,29 @@
+# Verification record
+
+Validation performed November 8, 2026, using only fictional/synthetic content. No genuine viewer history was supplied or created.
+
+## Commands and results
+
+- `python -m unittest discover -s tests -v`: **29 tests passed** after review fixes. Exercises real SQLite transactions/reopening, local HTTP, command protocol subprocesses, constraints, output validation, safe errors, reference fallback recording, ratings and skips, import atomicity, schema/number boundaries, extraction caching, and canary disclosure. Test count excludes browser acceptance.
+- `PYTHONPATH=. python tests/browser_check.py`: **passed** with system Chromium. Started and restarted the actual CLI server with a temporary SQLite database. Loaded the separate fictional demo; added three seen-title ratings; picked, requested another without creating feedback, recorded post-watch feedback, restarted, retained four watched records, enforced an empty runtime-constrained pool, reset skips, then marked the current pick watched from history and verified it was invalidated. Final history count five. Inspected **43 responses** for a distinctive private canary; checked rendered markup, local storage and server logs. No browser JavaScript errors or external browser requests. Mobile width 390px had no horizontal overflow. Screenshots: ignored `.data/artifacts/desktop.png` and `mobile.png`.
+- CLI import of `examples/demo.json`, two fixture extraction runs, `examples/demo-history.json`, and `examples/import-template.json`: completed using an isolated `/tmp` database. Automated test confirms 12 cache entries remain 12 after rerun and normal selection cannot invoke extraction.
+- `python -m compileall -q nospoilers`, `node --check nospoilers/static/app.js`, `git diff --check`: passed.
+- Current-instance server started with `python -m nospoilers serve` on port 8000. Functional local requests returned HTTP 200 for the UI and personal state. The personal catalog/history remained empty; no synthetic data was added to real use.
+
+Toolchain: Python **3.12.14**, SQLite **3.53.1**, optional Playwright **1.62.0**, system Chromium **156.0.8078.79**. Playwright’s separate bundled Chromium was absent; the acceptance check used `/usr/bin/chromium` successfully.
+
+## Review
+
+A fresh reviewer inspected source and contracts, ran the then-current 24-test suite, and found no Critical issues. Its Important findings (explicit null private profiles; stale current pick after history updates) received failing regression tests and fixes. Blank/bare URL query parameters, oversized numeric features, malformed provider payloads, and a separately discovered non-string history ID failure also received regression coverage and bounded handling. The final suite and browser checks passed after these changes. No identified findings remain deferred.
+
+## Timing and quality limits
+
+A local synthetic microbenchmark made 20 reference-selector calls over the 12-film fictional catalog with three synthetic reactions. Median measured selector time **0.0647 ms**, maximum **0.1896 ms**; this excludes HTTP, SQLite queries and browser rendering. Reference selection made zero network/model calls. These are tiny-fixture current-machine measurements, not an end-to-end performance guarantee or an advantage over Jev. No paid API was called; no cost comparison is supported.
+
+Personalization tests establish that changing an existing synthetic rating changes the chosen ID in a designed feature fixture, including seen-title profiles retained outside the unseen candidate pool. They do not establish recommendation quality for a real person. No genuine held-out evaluation is possible without genuine feedback.
+
+**Reference selector working; Jev integration pending.** No actual Jev runtime/API/checkpoint was available. The external selector subprocess was a protocol fixture, not Jev inference. Real model-backed extraction and live authenticated TMDB ingestion remain unverified; normalization, caching and failure contracts are tested locally.
+
+## Reusable environment configuration
+
+The onboarding save API returned `INVALID_ARGUMENT`; draft reads also returned `INVALID_ARGUMENT`. No startup-field persistence or publication was confirmed. Runtime status reports this selected instance running with current enforced network policy. [cloud-start.md](cloud-start.md) retains the tested startup instructions for environment settings. No runtime install script is needed because the application has no external runtime dependencies. No network, secret, or repository-membership settings were changed. New-task snapshot restoration has not been tested.

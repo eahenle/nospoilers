@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "mode": "demo",
+  "movies": [],
+  "history": [
+    {
+      "id": "demo:10",
+      "rating": "liked",
+      "watched": true
+    },
+    {
+      "id": "demo:11",
+      "rating": "disliked",
+      "watched": true
+    },
+    {
+      "id": "demo:12",
+      "rating": "neutral",
+      "watched": true
+    }
+  ]
+}

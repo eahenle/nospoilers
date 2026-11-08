@@ -1,0 +1,319 @@
+{
+  "version": 1,
+  "mode": "demo",
+  "movies": [
+    {
+      "id": "demo:01",
+      "title": "The Quiet Almanac",
+      "year": 2012,
+      "runtime": 82,
+      "source_ids": {},
+      "availability": [],
+      "private": {
+        "schema_version": 1,
+        "features": {
+          "pace": 0.0,
+          "warmth": 0.2,
+          "intensity": 0.4,
+          "character": 0.6,
+          "wonder": 0.8,
+          "closure": 1.0
+        },
+        "source_text": "Fictional fixture 1: an invented keeper hides a paper sun in a clock. The sun returns to its maker.",
+        "missing": [],
+        "provenance": {
+          "kind": "fixture",
+          "version": "demo-v1",
+          "source": "original fictional test material"
+        }
+      }
+    },
+    {
+      "id": "demo:02",
+      "title": "A Pocketful of Orbits",
+      "year": 2013,
+      "runtime": 86,
+      "source_ids": {},
+      "availability": [],
+      "private": {
+        "schema_version": 1,
+        "features": {
+          "pace": 0.3,
+          "warmth": 0.5,
+          "intensity": 0.7,
+          "character": 0.9,
+          "wonder": 0.0,
+          "closure": 0.2
+        },
+        "source_text": "Fictional fixture 2: an invented keeper hides a paper sun in a clock. The sun returns to its maker.",
+        "missing": [],
+        "provenance": {
+          "kind": "fixture",
+          "version": "demo-v1",
+          "source": "original fictional test material"
+        }
+      }
+    },
+    {
+      "id": "demo:03",
+      "title": "Letters from Larkspur",
+      "year": 2014,
+      "runtime": 90,
+      "source_ids": {},
+      "availability": [],
+      "private": {
+        "schema_version": 1,
+        "features": {
+          "pace": 0.6,
+          "warmth": 0.8,
+          "intensity": 1.0,
+          "character": 0.1,
+          "wonder": 0.3,
+          "closure": 0.5
+        },
+        "source_text": "Fictional fixture 3: an invented keeper hides a paper sun in a clock. The sun returns to its maker.",
+        "missing": [],
+        "provenance": {
+          "kind": "fixture",
+          "version": "demo-v1",
+          "source": "original fictional test material"
+        }
+      }
+    },
+    {
+      "id": "demo:04",
+      "title": "The Last Lantern Shop",
+      "year": 2015,
+      "runtime": 94,
+      "source_ids": {},
+      "availability": [],
+      "private": {
+        "schema_version": 1,
+        "features": {
+          "pace": 0.9,
+          "warmth": 0.0,
+          "intensity": 0.2,
+          "character": 0.4,
+          "wonder": 0.6,
+          "closure": 0.8
+        },
+        "source_text": "Fictional fixture 4: an invented keeper hides a paper sun in a clock. The sun returns to its maker.",
+        "missing": [],
+        "provenance": {
+          "kind": "fixture",
+          "version": "demo-v1",
+          "source": "original fictional test material"
+        }
+      }
+    },
+    {
+      "id": "demo:05",
+      "title": "Tuesday at the Glasshouse",
+      "year": 2016,
+      "runtime": 98,
+      "source_ids": {},
+      "availability": [],
+      "private": {
+        "schema_version": 1,
+        "features": {
+          "pace": 0.1,
+          "warmth": 0.3,
+          "intensity": 0.5,
+          "character": 0.7,
+          "wonder": 0.9,
+          "closure": 0.0
+        },
+        "source_text": "Fictional fixture 5: an invented keeper hides a paper sun in a clock. The sun returns to its maker.",
+        "missing": [],
+        "provenance": {
+          "kind": "fixture",
+          "version": "demo-v1",
+          "source": "original fictional test material"
+        }
+      }
+    },
+    {
+      "id": "demo:06",
+      "title": "The Velvet Observatory",
+      "year": 2017,
+      "runtime": 102,
+      "source_ids": {},
+      "availability": [],
+      "private": {
+        "schema_version": 1,
+        "features": {
+          "pace": 0.4,
+          "warmth": 0.6,
+          "intensity": 0.8,
+          "character": 1.0,
+          "wonder": 0.1,
+          "closure": 0.3
+        },
+        "source_text": "Fictional fixture 6: an invented keeper hides a paper sun in a clock. The sun returns to its maker.",
+        "missing": [],
+        "provenance": {
+          "kind": "fixture",
+          "version": "demo-v1",
+          "source": "original fictional test material"
+        }
+      }
+    },
+    {
+      "id": "demo:07",
+      "title": "A Map of Small Hours",
+      "year": 2018,
+      "runtime": 106,
+      "source_ids": {},
+      "availability": [],
+      "private": {
+        "schema_version": 1,
+        "features": {
+          "pace": 0.7,
+          "warmth": 0.9,
+          "intensity": 0.0,
+          "character": 0.2,
+          "wonder": 0.4,
+          "closure": 0.6
+        },
+        "source_text": "Fictional fixture 7: an invented keeper hides a paper sun in a clock. The sun returns to its maker.",
+        "missing": [],
+        "provenance": {
+          "kind": "fixture",
+          "version": "demo-v1",
+          "source": "original fictional test material"
+        }
+      }
+    },
+    {
+      "id": "demo:08",
+      "title": "The Other Side of Noon",
+      "year": 2019,
+      "runtime": 110,
+      "source_ids": {},
+      "availability": [],
+      "private": {
+        "schema_version": 1,
+        "features": {
+          "pace": 1.0,
+          "warmth": 0.1,
+          "intensity": 0.3,
+          "character": 0.5,
+          "wonder": 0.7,
+          "closure": 0.9
+        },
+        "source_text": "Fictional fixture 8: an invented keeper hides a paper sun in a clock. The sun returns to its maker.",
+        "missing": [],
+        "provenance": {
+          "kind": "fixture",
+          "version": "demo-v1",
+          "source": "original fictional test material"
+        }
+      }
+    },
+    {
+      "id": "demo:09",
+      "title": "When the Clocks Grew Leaves",
+      "year": 2020,
+      "runtime": 114,
+      "source_ids": {},
+      "availability": [],
+      "private": {
+        "schema_version": 1,
+        "features": {
+          "pace": 0.2,
+          "warmth": 0.4,
+          "intensity": 0.6,
+          "character": 0.8,
+          "wonder": 1.0,
+          "closure": 0.1
+        },
+        "source_text": "Fictional fixture 9: an invented keeper hides a paper sun in a clock. The sun returns to its maker.",
+        "missing": [],
+        "provenance": {
+          "kind": "fixture",
+          "version": "demo-v1",
+          "source": "original fictional test material"
+        }
+      }
+    },
+    {
+      "id": "demo:10",
+      "title": "The Paper Harbour",
+      "year": 2021,
+      "runtime": 118,
+      "source_ids": {},
+      "availability": [],
+      "private": {
+        "schema_version": 1,
+        "features": {
+          "pace": 0.5,
+          "warmth": 0.7,
+          "intensity": 0.9,
+          "character": 0.0,
+          "wonder": 0.2,
+          "closure": 0.4
+        },
+        "source_text": "Fictional fixture 10: an invented keeper hides a paper sun in a clock. The sun returns to its maker.",
+        "missing": [],
+        "provenance": {
+          "kind": "fixture",
+          "version": "demo-v1",
+          "source": "original fictional test material"
+        }
+      }
+    },
+    {
+      "id": "demo:11",
+      "title": "A Room Above the Rain",
+      "year": 2022,
+      "runtime": 122,
+      "source_ids": {},
+      "availability": [],
+      "private": {
+        "schema_version": 1,
+        "features": {
+          "pace": 0.8,
+          "warmth": 1.0,
+          "intensity": 0.1,
+          "character": 0.3,
+          "wonder": 0.5,
+          "closure": 0.7
+        },
+        "source_text": "Fictional fixture 11: an invented keeper hides a paper sun in a clock. The sun returns to its maker.",
+        "missing": [],
+        "provenance": {
+          "kind": "fixture",
+          "version": "demo-v1",
+          "source": "original fictional test material"
+        }
+      }
+    },
+    {
+      "id": "demo:12",
+      "title": "The Blue Bicycle Society",
+      "year": 2023,
+      "runtime": 126,
+      "source_ids": {},
+      "availability": [],
+      "private": {
+        "schema_version": 1,
+        "features": {
+          "pace": 0.0,
+          "warmth": 0.2,
+          "intensity": 0.4,
+          "character": 0.6,
+          "wonder": 0.8,
+          "closure": 1.0
+        },
+        "source_text": "Fictional fixture 12: an invented keeper hides a paper sun in a clock. The sun returns to its maker.",
+        "missing": [],
+        "provenance": {
+          "kind": "fixture",
+          "version": "demo-v1",
+          "source": "original fictional test material"
+        }
+      }
+    }
+  ],
+  "history": []
+}

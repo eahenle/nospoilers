@@ -1,0 +1,2 @@
+# Optional acceptance testing only; no runtime dependencies.
+playwright==1.62.0

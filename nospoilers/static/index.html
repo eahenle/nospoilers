@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NoSpoilers — leave room for surprise</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<body>
+<aside class="sidebar">
+  <a class="brand" href="/" aria-label="NoSpoilers home"><span class="brand-mark" aria-hidden="true">n<span>•</span></span><span>nospoilers<span class="brand-period">.</span></span></a>
+  <div class="sidebar-middle"><p class="eyebrow">A LITTLE LESS KNOWING</p><nav aria-label="Main navigation">
+    <button class="nav active" data-view="tonight"><span aria-hidden="true">◈</span> Tonight <span class="nav-arrow" aria-hidden="true">↗</span></button>
+    <button class="nav" data-view="history"><span aria-hidden="true">◷</span> Seen & rated <span id="history-count" class="count">0</span></button>
+    <button class="nav" data-view="setup"><span aria-hidden="true">⚙</span> Setup</button>
+  </nav></div>
+  <div class="sidebar-bottom"><div class="privacy-dot">PRIVATE BY DESIGN</div><p>Your taste stays here.<br>The story stays a surprise.</p><div class="version">NO SPOILERS. JUST A GOOD EVENING.</div></div>
+</aside>
+<main>
+  <header class="topbar"><span id="section-name">YOUR NEXT GOOD EVENING</span><label class="mode-switch">Catalog <select id="mode" aria-label="Catalog mode"><option value="real">Personal</option><option value="demo">Fictional demo</option></select></label></header>
+  <div id="notice" role="status" aria-live="polite" hidden></div>
+  <section id="view-tonight" class="view">
+    <div class="page-heading"><div><p class="eyebrow orange">GO IN KNOWING LESS.</p><h1>Let the movie<br>surprise you<span class="orange">.</span></h1><p class="intro">One thoughtful pick. No plot. No pitch.<br>Just something to press play on.</p></div><span class="edition" aria-hidden="true">THE EVENING<br>IS STILL<br>UNWRITTEN. <span>↙</span></span></div>
+    <div id="demo-banner" class="demo-banner" hidden>FICTIONAL DEMO <span>Invented movies. Separate feedback. No real streaming offers.</span></div>
+    <div class="pick-layout">
+      <article class="pick-card" aria-labelledby="pick-heading">
+        <div class="card-top"><span class="eyebrow">A LITTLE TRUST. A NEW FAVORITE.</span><span class="card-number" aria-hidden="true">01 / ∞</span></div>
+        <div id="pick-empty" class="pick-body"><div class="ticket" aria-hidden="true"><div>ADMIT<br><b>ONE</b></div><span>THE GOOD KIND OF UNKNOWN</span></div><p class="small-label">YOUR NEXT MOVIE IS WAITING</p><h2 id="pick-heading">Skip the search.<br>Keep the discovery.</h2><p>We’ll keep the details to ourselves.</p></div>
+        <div id="pick-result" class="pick-body result" hidden><p class="small-label">TONIGHT’S PICK</p><h2 id="movie-title"></h2><p id="movie-meta"></p><div id="watch-links"></div><p id="availability-note" class="availability-note"></p></div>
+        <div id="pick-abstain" class="pick-body" hidden><span class="empty-symbol" aria-hidden="true">∅</span><h2>A little more room?</h2><p id="empty-message"></p><button class="text-button" id="empty-settings">Adjust your settings ↗</button></div>
+        <div class="pick-actions"><button id="pick" class="primary">Pick for me <span aria-hidden="true">↗</span></button><button id="another" class="secondary" hidden>Another one ↻</button><p id="pick-caption">No trailers. No rabbit holes. No spoilers.</p></div>
+        <div id="feedback" class="feedback" hidden><p>Watched it? How did it land?</p><div class="reaction-buttons"><button data-reaction="liked">Liked it <span aria-hidden="true">♡</span></button><button data-reaction="neutral">It was okay</button><button data-reaction="disliked">Not for me</button><button data-reaction="unrated">Seen, unrated</button></div><label class="note-label">A private note (optional)<input id="feedback-note" maxlength="2000" placeholder="For your own reference"></label></div>
+        <div class="card-bottom"><span aria-hidden="true">◉</span> THE GOOD STUFF STAYS OFF-SCREEN.</div>
+      </article>
+      <aside class="tonight-aside"><section class="settings-card"><div class="section-row"><h2>Tonight, your way.</h2><button id="settings-toggle" class="text-button" aria-expanded="false" aria-controls="settings-form">Edit ↗</button></div><p class="muted">A few boundaries. Then let go.</p><dl id="settings-summary"></dl><form id="settings-form" hidden>
+        <label>Maximum runtime (minutes)<input id="max-runtime" type="number" min="1" max="1000" placeholder="Any length"></label>
+        <label>Region<input id="region" maxlength="2" pattern="[A-Za-z]{2}" required value="US"></label>
+        <label>Providers (comma separated)<input id="providers" maxlength="1500" placeholder="Leave blank for unrestricted catalog"></label>
+        <label>Allowed access<select id="access"><option value="included">Included streaming only</option><option value="included,free,ads">Included, free, or with ads</option><option value="included,free,ads,rent,buy">Also rental & purchase</option></select></label>
+        <label>Tonight’s mood<select id="mood"><option value="">No preference</option><option value="calm">Calm</option><option value="bright">Bright</option><option value="absorbing">Absorbing</option></select></label>
+        <label class="check"><input id="show-runtime" type="checkbox" checked> Show runtime</label><label class="check"><input id="show-availability" type="checkbox" checked> Show availability</label><button class="primary compact" type="submit">Save defaults</button>
+      </form><div class="settings-foot">Saved for your next evening, too.</div></section>
+      <section class="taste-card"><span class="little-star" aria-hidden="true">✳</span><h2>A little more you.</h2><p id="taste-message">Start anywhere. A few reactions help us find your kind of film.</p><button class="text-button" data-view="history">Add movies you’ve seen ↗</button></section>
+      <button id="reset" class="reset-button">↻ Reset this session’s skips</button><p class="skip-note">“Another one” is a fresh option,<br>never a dislike.</p></aside>
+    </div>
+    <div class="principles"><div><span>01</span><p><b>Choose less.</b><br>One movie, not an endless list.</p></div><div><span>02</span><p><b>Know less.</b><br>The story belongs to the screen.</p></div><div><span>03</span><p><b>Discover more.</b><br>Your reactions shape what’s next.</p></div></div>
+  </section>
+  <section id="view-history" class="view" hidden><div class="page-heading"><div><p class="eyebrow orange">THE PICKS GET TO KNOW YOU.</p><h1>Your evenings,<br>remembered<span class="orange">.</span></h1><p class="intro">Find a title you’ve seen. Tell us how it felt.<br>No descriptions, no questionnaire.</p></div></div><div class="history-layout"><section class="panel"><h2>Add a watched movie</h2><label>Search by title or year<input id="search" type="search" placeholder="A movie you already know" autocomplete="off"></label><p class="muted">Searches use your imported catalog. Add seen titles with the private import tools in Setup.</p><div id="search-results" aria-live="polite"></div></section><section class="panel"><h2>Seen & rated <span id="rated-total" class="muted"></span></h2><div id="history-list"></div></section></div></section>
+  <section id="view-setup" class="view" hidden><div class="page-heading"><div><p class="eyebrow orange">A SMALL, PRIVATE SETUP.</p><h1>Make room<br>for discovery<span class="orange">.</span></h1><p class="intro">Everything stays on this machine.<br>Start with a fictional demo, or bring your own catalog.</p></div></div><div class="setup-grid"><section class="panel"><span class="small-label">01 / TRY IT OUT</span><h2>A fictional first evening.</h2><p>Load 12 invented films without credentials. The demo profile is separate from your personal profile.</p><button id="load-demo" class="primary compact">Load fictional demo ↗</button><hr><h3>Optional synthetic history</h3><p>Try three made-up reactions to see personalization in action. These are demo ratings, never your real tastes.</p><button id="load-history" class="secondary">Load synthetic demo history</button></section><section class="panel"><span class="small-label">02 / MAKE IT YOURS</span><h2>Your catalog. Your history.</h2><p>Import authorized metadata and private features directly on the server. You don’t need to review plots to add unseen films.</p><code>python -m nospoilers import /path/to/catalog.json</code><p>Use <code>examples/import-template.json</code> and the format in <code>docs/contracts.md</code>. Include watched titles, even those outside your unseen catalog.</p><p>A TMDB adapter supports bulk metadata ingestion with your own read-access token. Private enrichment happens once, before selection.</p><p class="muted">No posters, trailers, or third-party requests are loaded by this interface.</p></section><section class="panel diagnostics"><span class="small-label">03 / UNDER THE HOOD</span><h2>Quietly, honestly working.</h2><p><strong>Reference selector working; Jev integration pending.</strong></p><p>No verified Jev implementation or API was supplied. The reference selector uses compatible private features and recorded ratings.</p><dl id="diagnostics"></dl></section></div></section>
+  <footer><span>nospoilers.</span><p>Leave room for surprise.</p><span aria-hidden="true">✳</span></footer>
+</main>
+</body></html>
