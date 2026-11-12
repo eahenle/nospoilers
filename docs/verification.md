@@ -27,3 +27,19 @@ Personalization tests establish that changing an existing synthetic rating chang
 ## Reusable environment configuration
 
 The onboarding save API returned `INVALID_ARGUMENT`; draft reads also returned `INVALID_ARGUMENT`. No startup-field persistence or publication was confirmed. Runtime status reports this selected instance running with current enforced network policy. [cloud-start.md](cloud-start.md) retains the tested startup instructions for environment settings. No runtime install script is needed because the application has no external runtime dependencies. No network, secret, or repository-membership settings were changed. New-task snapshot restoration has not been tested.
+
+## Mode-switch reaction isolation
+
+The UI removes old history controls immediately when switching modes, binds each
+history/search reaction row to its originating mode, and ignores a completed
+old-mode reaction before it can clear a new-mode pick. Pending search results also retain their originating mode before
+creating reaction controls, including programmatic demo switches. This prevents a retained
+demo row from writing a reaction into personal history when catalog IDs overlap.
+
+Run `node --test tests/test_mode_isolation.mjs` (Node.js 18+) for five focused
+regressions executing the actual UI script with DOM/transport fixtures. Three fail before their corresponding fixes. These are not browser-rendering tests. The optional
+real-browser scenario is `PYTHONPATH=. python tests/browser_mode_isolation.py`;
+it uses a temporary fictional database and delayed state refresh. Chromium could
+not launch in the repair environment because socket creation was restricted, so
+that scenario and the existing browser acceptance suite remain unverified for
+this change. The full Python unittest suite passes (29 tests).
