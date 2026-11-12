@@ -1,5 +1,6 @@
 """Local server and private ingestion tools. Never print source content."""
 import argparse
+import copy
 import json
 import os
 from pathlib import Path
@@ -42,13 +43,15 @@ def main():
             elif args.command and args.version: extractor=CommandExtractor(json.loads(args.command),args.version)
             else:
                 print('Choose --fixture --mode demo, or supply --command and an immutable --version.'); return 2
-            cache=CachedExtractor(store,extractor); movies=store.movies(args.mode)
+            cache=CachedExtractor(store,extractor); movies=store.movies(args.mode); updates=[]
             for m in movies:
                 old=m.get('private',{}); source=old.get('source_text','')
                 if source:
+                    original=copy.deepcopy(m)
                     p=cache.extract(source); p['source_text']=source
                     p['source_refs']=old.get('source_refs',[]); m['private']=p
-            store.ingest({'version':1,'mode':args.mode,'movies':movies,'history':[]})
+                    updates.append((original,m))
+            store.save_extraction(args.mode,updates)
             print('Extraction completed; compatible content/version cache entries reused.')
         else:
             selector=None

@@ -137,6 +137,22 @@ class Store:
                 db.execute('INSERT INTO history VALUES (?,?,?,?,1) ON CONFLICT(mode,id) DO UPDATE SET rating=excluded.rating,notes=excluded.notes,watched=1',(mode,h['id'],h.get('rating'),h.get('notes','')))
         return len(movies)
 
+    def save_extraction(self,mode,updates):
+        """Commit a batch only if its source movie snapshots are still current."""
+        if mode not in ('real','demo'): raise InvalidData()
+        for old,new in updates:
+            validate_movie(new)
+            if old['id'] != new['id']: raise InvalidData()
+        with self.db() as db:
+            # Reserve the writer before comparing; other imports must not slip
+            # between the snapshot check and its replacement.
+            db.execute('BEGIN IMMEDIATE')
+            for old,new in updates:
+                row=db.execute('SELECT data FROM movies WHERE mode=? AND id=?',(mode,old['id'])).fetchone()
+                if row is None or json.loads(row[0]) != old: raise InvalidData()
+                db.execute('UPDATE movies SET data=? WHERE mode=? AND id=?',
+                           (json.dumps(new,allow_nan=False),mode,new['id']))
+
     def react(self,mode,id,rating,notes=''):
         if rating not in ('liked','neutral','disliked',None) or not text(notes,2000,True): raise InvalidData()
         with self.db() as db:

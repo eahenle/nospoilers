@@ -17,6 +17,33 @@ class CLITests(unittest.TestCase):
             self.assertNotIn('PRIVATE_INGEST_CANARY',r.stdout)
             self.assertIn('Operation failed',r.stdout)
             self.assertEqual(Store(db).movies('real'),[])
+    def test_extraction_does_not_overwrite_a_concurrent_import(self):
+        from test_core import movie
+        with tempfile.TemporaryDirectory() as tmp:
+            db=Path(tmp)/'test.sqlite3'; store=Store(db)
+            first=movie('local:a'); second=movie('local:b')
+            store.ingest({'version':1,'mode':'real','movies':[first,second]})
+            # Real extractor subprocess changes the catalog through a separate
+            # connection while the CLI holds its original extraction snapshot.
+            code="""import json,sys
+from nospoilers.store import Store
+r=json.load(sys.stdin)
+s=Store(sys.argv[1]); movies=s.movies('real')
+movies[1]['title']='New import title'
+movies[1]['private']['source_text']='NEW_PRIVATE_SOURCE'
+s.ingest({'version':1,'mode':'real','movies':[movies[1]]})
+print(json.dumps({'schema_version':1,'features':{k:0.5 for k in r['feature_names']}}))
+"""
+            command=json.dumps([sys.executable,'-c',code,str(db)])
+            r=subprocess.run([sys.executable,'-m','nospoilers','--db',str(db),'extract','--command',command,'--version','race-v1'],capture_output=True,text=True)
+            current=store.movies('real')
+            self.assertEqual(current[1]['title'],'New import title')
+            self.assertEqual(current[1]['private']['source_text'],'NEW_PRIVATE_SOURCE')
+            self.assertEqual(current[0],first)  # Batch rollback, not partial enrichment.
+            self.assertEqual(r.returncode,1)
+            self.assertEqual(r.stderr,'')
+            self.assertNotIn('NEW_PRIVATE_SOURCE',r.stdout)
+
     def test_fixture_cache_repeated_and_selection_does_not_extract(self):
         with tempfile.TemporaryDirectory() as tmp:
             db=Path(tmp)/'test.sqlite3'
