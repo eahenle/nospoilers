@@ -64,11 +64,12 @@ class Service:
                 return {'code':code,'message':MESSAGES[code]}
             # Recheck against live persisted state after arbitrary external inference.
             current=next((m for m in self.store.movies(mode) if m['id']==decision['id']),None)
-            if current is None or not eligible(current,self.store.history(mode),self.store.exclusions(session,mode),self.store.settings(mode),utcnow()):
+            current_constraints=self.store.settings(mode)
+            if current is None or not eligible(current,self.store.history(mode),self.store.exclusions(session,mode),current_constraints,utcnow()):
                 return {'code':'no_acceptable_candidate','message':MESSAGES['no_acceptable_candidate']}
             with self.store.db() as db:
                 db.execute('INSERT OR IGNORE INTO offered VALUES (?,?,?)',(session,mode,current['id']))
-            return {'movie':public_movie(current,utcnow(),c)}
+            return {'movie':public_movie(current,utcnow(),current_constraints)}
 
     def diagnostics(self):
         with self.store.db() as db:
