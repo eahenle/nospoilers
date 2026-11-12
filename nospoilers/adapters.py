@@ -1,4 +1,4 @@
-"""Optional server-side bridges. Nothing here establishes actual Jev integration."""
+"""Optional server-side bridges for selection, extraction, and metadata."""
 import hashlib
 import json
 import subprocess
@@ -69,7 +69,7 @@ class CachedExtractor:
 
 
 class CommandSelector:
-    """Protocol bridge for a future implementation, not a verified Jev SDK."""
+    """Run a selector subprocess with a bounded shortlist and validate its decision."""
     name='external-command'
     def __init__(self,command,max_candidates):
         validate_command(command)

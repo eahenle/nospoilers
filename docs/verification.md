@@ -22,7 +22,7 @@ A local synthetic microbenchmark made 20 reference-selector calls over the 12-fi
 
 Personalization tests establish that changing an existing synthetic rating changes the chosen ID in a designed feature fixture, including seen-title profiles retained outside the unseen candidate pool. They do not establish recommendation quality for a real person. No genuine held-out evaluation is possible without genuine feedback.
 
-**Reference selector working; Jev integration pending.** No actual Jev runtime/API/checkpoint was available. The external selector subprocess was a protocol fixture, not Jev inference. Real model-backed extraction and live authenticated TMDB ingestion remain unverified; normalization, caching and failure contracts are tested locally.
+The November 8 delivery used the reference selector and tested the external selector subprocess with a protocol fixture. Real model-backed extraction and live authenticated TMDB ingestion remain unverified. The local tests cover normalization, caching, and failure handling.
 
 ## Reusable environment configuration
 
@@ -43,3 +43,15 @@ it uses a temporary fictional database and delayed state refresh. Chromium could
 not launch in the repair environment because socket creation was restricted, so
 that scenario and the existing browser acceptance suite remain unverified for
 this change. The full Python unittest suite passes (29 tests).
+
+## Hosted Jev adapter, November 12, 2026
+
+- `python -m unittest discover -s tests -v` passed **47 tests**, including 12 adapter tests. The adapter cases exercise the request allowlist, label-to-ID mapping, abstentions, candidate limits, malformed and out-of-set replies, missing credentials, HTTP errors, timeouts, and redirect refusal. One case runs the real selection subprocess against SQLite with a mocked HTTP transport and checks eligibility and explicit reference fallback.
+- `node --test tests/test_mode_isolation.mjs` passed **five tests**. Python compilation, JavaScript syntax checking, and `git diff --check` passed.
+- Both optional Playwright checks stopped at Chromium launch because the environment blocked socket creation. The Python suite exercised the local HTTP endpoints.
+
+All provider responses were simulated. The reference selector is still the default. This change made no paid inference calls and sent no personal history.
+
+### Authenticated smoke test pending
+
+With approval for one billable request, import `examples/demo.json` and `examples/demo-history.json` into a fresh temporary database. Use `--db` with the same path for both imports and the server. Supply `TYPESAFE_API_KEY` securely, start the [hosted selector](../README.md#optional-hosted-jev-selector) with reference fallback disabled, switch to demo mode, and request one pick. Check for a permitted selection or model abstention and confirm a successful request in TypeSafe’s usage console. This checks live authentication and response compatibility using only fictional data.
