@@ -2,7 +2,7 @@
 
 A local movie picker that leaves the story on the screen. Record movies you’ve seen, press **Pick for me**, and react after watching. Only title, year, optional runtime, and verified watch offers appear with a pick.
 
-**Reference selector working; Jev integration pending.** No Jev repository, checkpoint, SDK, or API was supplied. No real model integration or recommendation-quality advantage is claimed.
+The local reference selector runs by default. An opt-in adapter for hosted TypeSafe Jev has been tested with mocked responses and still needs an authenticated smoke test.
 
 ## Run
 
@@ -56,13 +56,22 @@ python -m nospoilers extract --mode real --command '["/absolute/path/to/extracto
 
 The executable must implement the exact contract in [docs/contracts.md](docs/contracts.md). A protocol test exercises a real subprocess; **actual model-backed extraction remains pending**. Imported source text is untrusted data. The application validates output and never displays extraction text, but the selected external executable and its handling of source data must be trusted.
 
-A future Jev implementation can implement `select(preference, candidates, mood)` or run behind `CommandSelector`. A command bridge is available, but does not establish Jev integration:
+## Optional hosted Jev selector
+
+Only opt in if you agree to send the request data described below to TypeSafe and incur usage charges. Create a key in the TypeSafe console and inject `TYPESAFE_API_KEY` into the server process environment using a secret manager or a non-echoing prompt with shell tracing disabled. Keep the key out of command arguments, source files, logs, and chat. [TypeSafe API keys](https://console.typesafe.ai/settings/keys)
 
 ```sh
-python -m nospoilers serve --selector-command '["/absolute/path/to/bridge"]' --candidate-limit 100
+python -m nospoilers serve \
+  --selector-command '["python","-m","nospoilers.jev"]' --candidate-limit 32
 ```
 
-Set the limit from that implementation’s documented capacity. This bridge shortlists by ascending ID; its potential quality bias is documented and unmeasured. Invalid output and failures abstain. `--reference-fallback` explicitly enables fallback; diagnostics record its uses. The **Setup** screen reports the configured backend and actual last-call timing.
+This configures the command selector for both catalog modes in that server process. Use the same Python interpreter for the server and the subprocess. Restart with `python -m nospoilers serve` to use the local reference selector. `--reference-fallback` explicitly enables the local picker on an integration error and records its use in diagnostics.
+
+TypeSafe receives numeric candidate features under temporary labels, numeric mood targets, and rounded averages from liked and disliked profiles. Stable IDs, titles, plots, and individual history records stay local. Averages and features can still reveal tastes, particularly when the history is small. [Request and privacy details](docs/contracts.md#hosted-jev-adapter)
+
+Use a `--candidate-limit` from 1 to 253. The command bridge shortlists eligible movies by ascending ID, which can affect recommendations. TypeSafe lists **$0.042 per million input tokens** with free output tokens. Actual cost depends on request size. [TypeSafe pricing](https://help.typesafe.ai/articles/5187202169-how-much-does-jev-cost)
+
+The same command bridge accepts other executables using JSON argv and an explicit `--candidate-limit`. The **Setup** screen reports the configured backend and last-call timing. [Subprocess contract](docs/contracts.md#command-selector-protocol)
 
 ## Validate
 

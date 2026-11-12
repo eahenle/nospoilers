@@ -13,7 +13,7 @@ Python 3.12+ is required (validated 3.12.14, SQLite 3.53.1). There are no third-
 
 Optional browser acceptance: `PYTHONPATH=. python tests/browser_check.py` uses the installed Playwright 1.62.0 and `/usr/bin/chromium`, starts/restarts its own server with a temporary database, and writes ignored screenshots in `.data/artifacts/`. If the optional tooling is absent, `requirements-browser.txt` pins Playwright and `CHROMIUM_PATH` selects an installed Chromium. Browser tooling is not needed to run the application.
 
-Reference selector working; Jev integration pending. No Jev implementation/checkpoint/SDK/API was supplied. Real model extraction requires a separately configured executable. TMDB ingestion requires the optional `TMDB_READ_ACCESS_TOKEN` and authorized source access. Neither integration is needed for the local demo, and neither was verified live. Fixture extraction and subprocess contracts were verified.
+The local demo uses the reference selector by default. The opt-in hosted Jev adapter has been tested with mocked responses. Real model extraction requires a separately configured executable. TMDB ingestion requires the optional `TMDB_READ_ACCESS_TOKEN` and authorized source access. Fixture extraction and subprocess contracts were verified. [Hosted selector setup](../README.md#optional-hosted-jev-selector)
 
 ## Draft persistence
 

@@ -74,7 +74,7 @@ class Service:
         with self.store.db() as db:
             count=db.execute('SELECT count(*) FROM decisions WHERE fallback=1').fetchone()[0]
             row=db.execute('SELECT elapsed_ms,code FROM decisions ORDER BY n DESC LIMIT 1').fetchone()
-        return {'backend':self.selector.name,'jev_status':'pending: no verified implementation supplied',
+        return {'backend':self.selector.name,'jev_status':'opt-in adapter available, live API unverified',
                 'extraction':'Precomputed features supported; model extraction requires a configured command.',
                 'schema_version':1,'fallback_enabled':self.fallback,'fallback_count':count,
                 'last_selection_ms':round(row[0],2) if row else None,'last_outcome':row[1] if row else None}

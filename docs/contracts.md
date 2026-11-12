@@ -59,13 +59,21 @@ The reusable Python selector receives `select(preference, candidates, mood)`. Ca
 
 Exact output: `{"id":"one-of-the-input-IDs"}` or `{"abstain":"insufficient_information|no_acceptable_candidate|inference_error"}` (one reason string, not the literal pipe notation). Every other field, prose, invalid type, and out-of-set ID is rejected. Recheck current eligibility before presentation. Failures become fixed neutral messages. Reference fallback is opt-in and persisted in diagnostics.
 
-### Future Jev command bridge
-
-No real Jev dependency is installed or verified. Missing prerequisite: an actual Jev implementation/checkpoint or callable API plus its input/option schema, context limits, runtime/inference requirements, and access if needed. `CommandSelector` is a narrow adapter protocol for the integrator, not an invented Jev API.
+### Command selector protocol
 
 A configured executable reads one JSON object on stdin with `schema_version`, `preference`, `mood`, `candidates` (flat `{id,features}` profiles), `criteria`, and explicit `permitted_outcomes`. It returns exactly one decision JSON object on stdout. No shell execution. A 30-second timeout, nonzero exit, malformed JSON, excessive stdout (>1 MB after capture), or invalid result yields bounded failure. stderr is captured and never echoed. Trust only executables you control; command execution is an explicit developer operation. Output capture is not an OS sandbox or hard resource quota.
 
-An explicit capacity is required. The bridge takes the first N eligible IDs in ascending order, then validates within that shortlist. This deterministic policy can bias recommendations, and has **not** been evaluated against a real Jev or genuine feedback. Reference selection uses the full eligible set. A fabricated protocol subprocess is tested only as a protocol test.
+An explicit capacity is required. The bridge takes the first N eligible IDs in ascending order, then validates within that shortlist. This deterministic policy can bias recommendations. Reference selection uses the full eligible set. With `--reference-fallback`, integration failures and `inference_error` invoke the reference selector. The other two abstentions are final.
+
+### Hosted Jev adapter
+
+`python -m nospoilers.jev` implements the subprocess protocol. It validates the schema version and checks that the unique candidate IDs exactly match the permitted IDs. It returns `no_acceptable_candidate` locally for an empty pool. With neither a mood nor any liked or disliked feature evidence, it picks the first stable ID locally. For a personalized or mood-based pick, it offers candidates that have at least one feature comparable to a preference or mood target, and returns `insufficient_information` locally if none qualify.
+
+For a hosted pick the adapter makes one authenticated HTTPS `POST` to TypeSafe’s `/v1/systemone`, pinned to `jev-1.14.0`. It uses a single named `choice` question with a `criteria` map of temporary candidate labels and two abstention options. It checks the answer type, option membership, and probability distribution. The selected option must be among the highest-probability options. The adapter maps `answers.pick.choice` back to a permitted local ID or abstention. [System One API](https://docs.typesafe.ai/api/system-one) · [Choice reference](https://docs.typesafe.ai/primitives/choice) · [Model versions](https://docs.typesafe.ai/models)
+
+The request sends each offered candidate’s six numeric features with nulls for unknowns, numeric mood targets, and per-feature means of liked and disliked profiles rounded to two decimal places. Neutral examples are omitted. The adapter uses fixed instructions. It keeps the subprocess criteria text, stable IDs, titles, source text, notes, availability, and individual rating records local. Even with temporary labels, features and preferences can reveal behavioral information. With few ratings an average can reflect a single reaction. [TypeSafe data use and retention](https://help.typesafe.ai/articles/5974925716)
+
+TypeSafe documents up to 255 Choice options, leaving 253 for candidates. The adapter returns `inference_error` without sending a request if its shortlist exceeds 253. Jev 1.14 also has standard context limits of 32k tokens per question and 64k per request. The adapter makes one attempt, uses a 10-second HTTP socket timeout inside the command bridge’s 30-second subprocess deadline, and rejects redirects. Missing credentials, transport errors, non-200 responses, oversized or malformed replies, and unoffered selections return `inference_error`. The adapter emits only the decision JSON. Credentials, provider responses, and request contents are omitted from logs. [Choice limits](https://docs.typesafe.ai/primitives/choice) · [Context limits](https://docs.typesafe.ai/models#context-length)
 
 ## Extraction contract
 

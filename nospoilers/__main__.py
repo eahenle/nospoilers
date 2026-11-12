@@ -15,7 +15,7 @@ def main():
     parser.add_argument('--db',default='.data/nospoilers.sqlite3')
     sub=parser.add_subparsers(dest='action')
     serve=sub.add_parser('serve'); serve.add_argument('--port',type=int,default=8000)
-    serve.add_argument('--selector-command',help='JSON argv for a separately supplied bridge; not verified Jev')
+    serve.add_argument('--selector-command',help='JSON argv for an optional selector subprocess')
     serve.add_argument('--candidate-limit',type=int)
     serve.add_argument('--reference-fallback',action='store_true')
     imp=sub.add_parser('import'); imp.add_argument('file',type=Path)
@@ -59,7 +59,7 @@ def main():
                 if args.candidate_limit is None: raise InvalidData()
                 selector=CommandSelector(json.loads(args.selector_command),args.candidate_limit)
             server=make_server(Service(store,selector,getattr(args,'reference_fallback',False)),port=getattr(args,'port',8000))
-            print(f'NoSpoilers listening on local port {server.server_port}. Reference selector working; Jev integration pending.',flush=True)
+            print(f'NoSpoilers listening on local port {server.server_port}.',flush=True)
             try: server.serve_forever()
             except KeyboardInterrupt: pass
             finally: server.server_close()
