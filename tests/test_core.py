@@ -47,6 +47,26 @@ class CoreTests(unittest.TestCase):
         m=movie();m['private']['features']['pace']=10**400
         with self.assertRaises(InvalidData): self.load([m])
 
+    def test_extraction_updates_preserve_unrelated_imports_history_and_modes(self):
+        original=movie(); self.load([original])
+        self.load([original],mode='demo')
+        enriched=copy.deepcopy(original); enriched['private']['features']['pace']=0.5
+        self.load([movie('local:new')])
+        self.store.react('real',original['id'],'liked','latest reaction')
+        self.store.save_extraction('real',[(original,enriched)])
+        self.assertEqual(self.store.movies('real'),[enriched,movie('local:new')])
+        self.assertEqual(self.store.movies('demo'),[original])
+        self.assertEqual(self.store.history('real')[0]['notes'],'latest reaction')
+
+    def test_extraction_missing_source_rolls_back_earlier_updates(self):
+        a,b=movie('local:a'),movie('local:b'); self.load([a,b])
+        enriched=copy.deepcopy(a); enriched['private']['features']['pace']=0.5
+        with self.store.db() as db:
+            db.execute('DELETE FROM movies WHERE mode=? AND id=?',('real',b['id']))
+        with self.assertRaises(InvalidData):
+            self.store.save_extraction('real',[(a,enriched),(b,b)])
+        self.assertEqual(self.store.movies('real'),[a])
+
     def test_history_persists_and_updates_without_duplicates(self):
         self.load()
         self.store.react('real', 'local:a', 'liked', 'note')
