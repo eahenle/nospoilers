@@ -11,6 +11,14 @@ class IntegrationError(Exception):
     def __init__(self): super().__init__('integration_error')
 
 
+def validate_command(command):
+    """Both bridges require JSON argv, never a shell string or arbitrary JSON."""
+    if (not isinstance(command,list) or not command
+        or not all(isinstance(arg,str) and '\0' not in arg for arg in command)
+        or not command[0]):
+        raise IntegrationError()
+
+
 def run_json(command, request, timeout=30):
     try:
         result=subprocess.run(command,input=json.dumps(request),capture_output=True,text=True,timeout=timeout,check=False)
@@ -32,6 +40,7 @@ class FixtureExtractor:
 class CommandExtractor:
     kind='command'
     def __init__(self,command,version):
+        validate_command(command)
         self.command=command; self.version=version
     def extract(self,source):
         return run_json(self.command,{'operation':'extract','schema_version':SCHEMA_VERSION,
@@ -63,7 +72,8 @@ class CommandSelector:
     """Protocol bridge for a future implementation, not a verified Jev SDK."""
     name='external-command'
     def __init__(self,command,max_candidates):
-        if not isinstance(command,list) or not command or not all(isinstance(s,str) for s in command) or type(max_candidates) is not int or max_candidates<1:
+        validate_command(command)
+        if type(max_candidates) is not int or max_candidates<1:
             raise IntegrationError()
         self.command=command; self.max_candidates=max_candidates
     def select(self,preference,candidates,mood):

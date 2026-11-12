@@ -34,6 +34,25 @@ class AdapterTests(unittest.TestCase):
         with self.assertRaises(IntegrationError) as cm:
             CachedExtractor(self.store,Bad({})).extract(CANARY)
         self.assertNotIn(CANARY,str(cm.exception))
+    def test_command_bridges_reject_invalid_argv_before_execution(self):
+        from unittest.mock import patch
+        invalid=[None, {}, [], sys.executable, [42], [None], [''],
+                 [sys.executable, 42], [sys.executable, 'bad\0argument']]
+        for command in invalid:
+            for constructor in (lambda c: CommandExtractor(c,'test-v1'),
+                                lambda c: CommandSelector(c,2)):
+                with self.subTest(command=command,constructor=constructor):
+                    with patch('nospoilers.adapters.subprocess.run') as run:
+                        with self.assertRaises(IntegrationError): constructor(command)
+                        run.assert_not_called()
+
+    def test_command_bridges_preserve_empty_non_executable_arguments(self):
+        command=[sys.executable,'-c',
+                 "import json,sys; assert sys.argv[1] == ''; print(json.dumps({'schema_version':1,'features':{k:None for k in json.load(sys.stdin)['feature_names']}}))",'']
+        result=CommandExtractor(command,'empty-arg-v1').extract('synthetic source')
+        self.assertEqual(result['schema_version'],1)
+        self.assertEqual(result['features'],{k:None for k in FEATURES})
+
     def test_command_extraction_contract_and_failure(self):
         code="import json,sys; r=json.load(sys.stdin); print(json.dumps({'schema_version':1,'features':{k:None for k in r['feature_names']}}))"
         p=CachedExtractor(self.store,CommandExtractor([sys.executable,'-c',code],'test-v1')).extract(CANARY)
