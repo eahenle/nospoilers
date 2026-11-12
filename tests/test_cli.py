@@ -17,6 +17,26 @@ class CLITests(unittest.TestCase):
             self.assertNotIn('PRIVATE_INGEST_CANARY',r.stdout)
             self.assertIn('Operation failed',r.stdout)
             self.assertEqual(Store(db).movies('real'),[])
+    def test_invalid_extractor_argv_is_bounded_even_without_source_movies(self):
+        from test_core import movie
+        invalid=[None, {}, [], 42, [42], [None], [''], ['bad\0executable']]
+        with tempfile.TemporaryDirectory() as tmp:
+            db=Path(tmp)/'test.sqlite3'; store=Store(db)
+            for populated in (False,True):
+                if populated: store.ingest({'version':1,'mode':'real','movies':[movie()]})
+                before=store.movies('real')
+                for command in invalid:
+                    with self.subTest(command=command,populated=populated):
+                        r=subprocess.run([sys.executable,'-m','nospoilers','--db',str(db),
+                            'extract','--command',json.dumps(command),'--version','invalid-v1'],
+                            capture_output=True,text=True)
+                        self.assertEqual(r.returncode,1)
+                        self.assertEqual(r.stderr,'')
+                        self.assertEqual(r.stdout,'Operation failed (invalid_data_or_integration). No source content logged.\n')
+                        self.assertEqual(store.movies('real'),before)
+                        with store.db() as conn:
+                            self.assertEqual(conn.execute('SELECT count(*) FROM extraction').fetchone()[0],0)
+
     def test_extraction_does_not_overwrite_a_concurrent_import(self):
         from test_core import movie
         with tempfile.TemporaryDirectory() as tmp:
