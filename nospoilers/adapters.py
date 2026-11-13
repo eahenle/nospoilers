@@ -2,7 +2,8 @@
 import hashlib
 import json
 import subprocess
-from urllib.request import Request, urlopen
+from urllib.error import HTTPError
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 from .core import FEATURES, SCHEMA_VERSION, validate_decision, utcnow
 from .store import features_valid, validate_movie, InvalidData
 
@@ -87,16 +88,25 @@ class CommandSelector:
         except ValueError: raise IntegrationError() from None
 
 
+class _NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        # Never forward authenticated requests to a redirected destination.
+        return None
+
+
 class TMDB:
     """Authorized bulk metadata path. Requires an actual TMDB read-access bearer token."""
     def __init__(self,token): self.token=token
     def get(self,path):
         try:
             req=Request('https://api.themoviedb.org/3/'+path,headers={'Authorization':'Bearer '+self.token,'Accept':'application/json'})
-            with urlopen(req,timeout=30) as response:
+            with build_opener(_NoRedirect()).open(req,timeout=30) as response:
                 raw=response.read(4000001)
             if len(raw)>4000000: raise IntegrationError()
             return json.loads(raw)
+        except HTTPError as exc:
+            exc.close()
+            raise IntegrationError() from None
         except Exception:
             raise IntegrationError() from None
     def collect(self,ids=(),pages=1):
