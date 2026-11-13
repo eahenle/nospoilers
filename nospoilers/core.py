@@ -17,7 +17,7 @@ def utcnow():
 def fresh(offer, now):
     try:
         checked = datetime.fromisoformat(offer['checked_at'].replace('Z', '+00:00'))
-        return checked.tzinfo is not None and timedelta(0) <= now - checked <= FRESHNESS
+        return checked.tzinfo is not None and timedelta(0) <= now - checked < FRESHNESS
     except (ValueError, TypeError, KeyError):
         return False
 
